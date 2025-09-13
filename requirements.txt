@@ -2,5 +2,5 @@ numpy>=2.0
 pandas>=2.2
 scikit-learn>=1.5,<1.6
 sdv>=1.12.0
-ctgan>=0.7.2
+ctgan>=0.11.0
 tqdm>=4.66
