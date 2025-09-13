@@ -1,5 +1,9 @@
-pandas==2.2.3
-numpy==1.26.0
-scikit-learn==1.6.2
-ctgan==0.10.0
-colorama==0.4.6
+# core
+numpy>=2.0
+pandas>=2.2
+scikit-learn>=1.6
+
+# tabular synth
+ctgan>=0.7
+
+# (keep or add anything else you already had)
