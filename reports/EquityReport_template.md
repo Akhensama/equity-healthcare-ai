@@ -33,7 +33,7 @@ Status: {{baseline_status}} (PASS or FAIL)
 
 ## 3) After Mitigation (Synthetic Balance)
 
-Method applied: {{method_name}} (example: CTGAN female oversampling)
+Method applied: {{method_name}}
 
 | Metric              | Male            | Female          | Gap (F-M, pp)     | Threshold |
 |---------------------|-----------------|-----------------|-------------------|-----------|
