@@ -49,41 +49,108 @@ Clone the repo and install dependencies:
 
 git clone https://github.com/defnecolak/equity-healthcare-ai.git
 cd equity-healthcare-ai
-pip install -r requirements.txt
 
-Usage
+Re-install deps inside the activated venv:
 
-Run the demo report with example data:
+python -m pip install --upgrade pip
+python -m pip install --no-cache-dir -r requirements.txt
 
-python -m app.reporting.run_demo \
-  --csv_before data/imbalanced.csv \
-  --csv_after data/synthetic/balanced_ctgan.csv \
-  --out reports/BeforeAfter_EquityReport.md \
+Run your pipeline:
+python app\synthetic\balance_with_ctgan.py --csv data\imbalanced.csv --out data\synthetic\balanced.csv --epochs 300
+
+
+# Build the report
+python -m app.reporting.run_demo `
+  --csv_before data\imbalanced.csv `
+  --csv_after  data\synthetic\balanced.csv `
+  --out reports\BeforeAfter_EquityReport.md `
   --thr 0.5
-This will generate a Markdown report in reports/BeforeAfter_EquityReport.md.
 
-Example Output:
 
-## 1. Representation
+# Open the report
+notepad reports\BeforeAfter_EquityReport.md
+
+Example Output (Based on my test):
+
+# Equity Report - ER Triage (Admit vs Discharge)
+
+Hospital: Demo General Hospital  
+Dataset size: 20 patients (14 M / 6 F / 0 Other)  
+Date generated: 2025-09-13  
+Version: v0.1
+
+---
+
+## 1) Representation
+
 - % Female patients: 30.0%
-- Threshold check: FAIL (≥ 45% recommended)
+- Threshold check: >= 45% recommended
+- Coverage by subgroup:
+  - Chest pain (M: , F: )
+  - Age <50 / >=50 split by sex
 
-## 2. Baseline Performance (Original Data)
-AUROC gap: 0.0 pp
-FNR gap: 0.0 pp
-Calibration delta: 0.06
+Status: FAIL (PASS or FAIL)
 
-## 3. After Mitigation (Synthetic Balance)
-Method: CTGAN oversampling
-AUROC gap: 12.0 pp
-FNR gap: 20.0 pp
-Calibration delta: 0.105
+---
 
-## 5. Verdict & Recommendation
-Overall Utility: FAIL
-Fairness: FAIL
-Privacy: FAIL
-Recommendation: Sandbox evaluation with clinical review.
+## 2) Baseline Performance (Original Data)
+
+| Metric              | Male        | Female      | Gap (F-M, pp) | Threshold |
+|---------------------|-------------|-------------|---------------|-----------|
+| AUROC               | 1.0 | 1.0 | 0.0 | <= 2 pp   |
+| FNR @ thr=0.5       | 0.0%  | 0.0%  | 0.0   | <= 5 pp   |
+| Calibration Delta   | -           | -           | 0.06 | <= 0.05   |
+
+Status: FAIL (PASS or FAIL)
+
+---
+
+## 3) After Mitigation (Synthetic Balance)
+
+Method applied: CTGAN female oversampling (example: CTGAN female oversampling)
+
+| Metric              | Male            | Female          | Gap (F-M, pp)     | Threshold |
+|---------------------|-----------------|-----------------|-------------------|-----------|
+| AUROC               | 1.0 | 0.833 | 16.67 | <= 2 pp   |
+| FNR @ thr=0.5       | 0.0%  | 16.7%  | 16.7   | <= 5 pp   |
+| Calibration Delta   | -               | -               | 0.173 | <= 0.05   |
+
+Status: FAIL (PASS or FAIL)
+
+Change vs baseline:
+- Female ratio: 30.0% -> 41.7%
+- AUROC gap: 0.0 -> 16.67
+- FNR gap: 0.0 pp -> 16.7 pp
+- Calibration Delta: 0.06 -> 0.173
+
+---
+
+## 4) Privacy & Utility (Synthetic Data)
+
+- Nearest neighbor distance: N/A >= tau -> FAIL
+- Membership inference AUC: N/A ~0.5 -> FAIL
+- Utility drop (AUROC real vs syn): N/A pp (<= 2 pp recommended)
+
+Status: FAIL (PASS or FAIL)
+
+---
+
+## 5) Verdict & Recommendation
+
+Overall Utility: FAIL  
+Fairness: FAIL  
+Privacy: FAIL  
+
+Recommendation: FNR gap 0.0 pp -> 16.7 pp (up by 16.7 pp) ; AUROC gap 0.0 pp -> 16.67 pp. Recommend sandbox evaluation with clinical review.
+
+---
+
+Notes:
+- "pp" = percentage points  
+- PASS means threshold met, FAIL means threshold not met  
+- Report is a prototype, not for clinical use
+
+
 
 Contributing:
 
