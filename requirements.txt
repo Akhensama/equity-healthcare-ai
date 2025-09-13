@@ -1,9 +1,20 @@
-# core
+# Core scientific stack
 numpy>=2.0
 pandas>=2.2
 scikit-learn>=1.6
 
-# tabular synth
-ctgan>=0.7
+# Synthetic data generation
+sdv>=1.12.0
+ctgan>=0.7.2
 
-# (keep or add anything else you already had)
+# Reporting / visualization
+matplotlib>=3.9
+seaborn>=0.13
+jupyter>=1.0
+
+# Utilities
+tqdm>=4.66
+pyyaml>=6.0
+
+# Optional but recommended
+scipy>=1.13
