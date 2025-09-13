@@ -1,165 +1,104 @@
-# equity-healthcare-ai
+equity-healthcare-ai
+
 Prototype for fairness and equity reporting in healthcare ML models using synthetic balancing.
+This project helps evaluate gender representation and bias in clinical prediction tasks (e.g., ER triage) and tests mitigation approaches like CTGAN oversampling.
 
-Equity in Healthcare AI
+⚠️ Disclaimer: This is a research prototype, not for clinical use.
 
-MOTIVE: Close gender gaps in healthcare data using synthetic data.
+✨ Features
 
-🚨 Problem Statement
+📊 Before/After comparison of fairness metrics (AUROC, FNR, Calibration).
 
-Women in healthcare settings often face worse outcomes because clinical algorithms and datasets are biased toward male patients.
+👩‍⚕️ Representation check (e.g., % female patients).
 
-Post-operative mortality risk increases when women are treated by male surgeons.
+🧪 Synthetic data mitigation using generative models (e.g., CTGAN).
 
-Women with chest pain are more likely to be discharged than men, even when they need care.
+📝 Generates a Markdown equity report ready for sharing.
 
-This inequity leads to misdiagnosis, mistreatment, and avoidable harm.
+🔒 Includes privacy & utility placeholders for future testing.
 
-🌍 Vision
+📂 Project Structure
 
-A data platform that ensures healthcare AI works equally well for women by providing:
-
-Synthetic female patient data
-
-Fairness audits
-
-Bias-mitigation tools
-
-→ So hospitals can deliver safe, equitable care.
-
-🚫 Non-Goals (for now)
-
-Not replacing electronic health record (EHR) systems.
-
-Not building new diagnostic algorithms from scratch.
-
-Not tackling every equity axis at once (e.g., race, age, socioeconomic status).
-Focus first: sex/gender.
-
-🎯 MVP Slice
-
-Emergency Room triage → predicting admission vs. discharge.
-
-Why start here?
-
-Public datasets exist (MIMIC-IV ICU/ED).
-
-Clear binary outcome.
-
-Documented disparities in triage scores by sex.
-
-High impact for hospital partners.
-
-🛠️ MVP Workflow: ER Triage (Admit vs. Discharge)
-
-Input (Hospital uploads data)
-
-Past ER records: vitals, labs, age, sex, outcome (admit/discharge).
-
-Example: CSV/Excel with 100,000 patients.
-
-Audit (System checks fairness)
-
-% male vs. female patients.
-
-Error rates (false negatives higher for women?).
-
-Output: ⚠ warnings if disparities are found.
-
-Synthetic Data Generation (Balance dataset)
-
-Use CTGAN/SDV to create synthetic female patient records.
-
-Synthetic data looks real but matches no actual person.
-
-Privacy tests ensure no patient can be re-identified.
-
-Model Training + Bias Mitigation (Sandbox)
-
-Train predictive model (admit vs. discharge).
-
-Compare:
-
-Original (biased) vs. Balanced (fairer).
-
-Output (Equity Report)
-
-Representation of women in ER data.
-
-Bias metrics (error rates, calibration gap).
-
-Before/after mitigation.
-
-Recommended strategies.
-
-🏥 Impact
-
-Hospital leadership → concrete evidence of bias.
-
-Doctors → confidence that triage tools aren’t ignoring women.
-
-Patients (esp. women) → fairer, safer admission decisions.
-
-📊 Fairness Metrics (initial list)
-
-Error-rate parity → false negatives/false positives by sex.
-
-Calibration gap → predicted vs. actual risk across sexes.
-
-Subgroup coverage → representation of female patients.
-
-📂 Repo Structure
 equity-healthcare-ai/
 │
-├── README.md                # project overview (this file)
-├── governance/              # governance & ethics docs
-│   ├── DPIA_template.md
-│   ├── fairness_metrics.md
-│
-├── data/
-│   ├── raw/                 # real datasets (later)
-│   ├── synthetic/           # SDV-generated CSVs
-│   ├── fake_er.csv          # toy dataset for demo
-│   └── README.md
-│
-├── synthetic/
-│   ├── ctgan_baseline.ipynb
-│   ├── tvae_experiment.ipynb
-│
-├── model/
-│   ├── baseline_classifier.ipynb
-│   ├── bias_audit.ipynb
-│
 ├── app/
-│   ├── reporting/
-│   │   ├── compute_metrics.py
-│   │   ├── generate_equity_report.py
-│   │   ├── metrics_example.py
-│   │   └── run_demo.py
-│   ├── streamlit_app.py
-│   └── requirements.txt
+│   └── reporting/              # Core reporting logic
+│       ├── compute_metrics.py
+│       ├── generate_equity_report.py
+│       └── run_demo.py          # Entry point
 │
-└── reports/
-    ├── EquityReport_template.md   # template with {{placeholders}}
-    ├── DataCard_template.md
-    └── Demo_EquityReport.md       # generated demo report
+├── data/                        # Example CSVs
+│   ├── imbalanced.csv
+│   └── synthetic/
+│       └── balanced_ctgan.csv
+│
+├── reports/                     # Output reports
+│   └── BeforeAfter_EquityReport.md
+│
+├── governance/                  # Templates for compliance
+│   ├── DPIA_template.md
+│   └── fairness_metrics.md
+│
+├── requirements.txt             # Dependencies
+└── README.md
 
-📜 DPIA (Data Protection Impact Assessment) Outline
 
-Purpose: Generate synthetic patient data + audit algorithms for fairness across sex.
+Installation
 
-Data Types: Demographics, vitals, labs, admission outcome.
+Clone the repo and install dependencies:
 
-Risks: Re-identification, misuse of synthetic data, algorithmic harm.
+git clone https://github.com/defnecolak/equity-healthcare-ai.git
+cd equity-healthcare-ai
+pip install -r requirements.txt
 
-Safeguards:
+Usage
 
-De-identification of real data.
+Run the demo report with example data:
 
-Privacy tests for synthetic data.
+python -m app.reporting.run_demo \
+  --csv_before data/imbalanced.csv \
+  --csv_after data/synthetic/balanced_ctgan.csv \
+  --out reports/BeforeAfter_EquityReport.md \
+  --thr 0.5
+This will generate a Markdown report in reports/BeforeAfter_EquityReport.md.
 
-Advisory board review.
+Example Output:
 
-Impact: Improved equity in clinical decision support.
+## 1. Representation
+- % Female patients: 30.0%
+- Threshold check: FAIL (≥ 45% recommended)
 
-Next Review: Every 6 months.
+## 2. Baseline Performance (Original Data)
+AUROC gap: 0.0 pp
+FNR gap: 0.0 pp
+Calibration delta: 0.06
+
+## 3. After Mitigation (Synthetic Balance)
+Method: CTGAN oversampling
+AUROC gap: 12.0 pp
+FNR gap: 20.0 pp
+Calibration delta: 0.105
+
+## 5. Verdict & Recommendation
+Overall Utility: FAIL
+Fairness: FAIL
+Privacy: FAIL
+Recommendation: Sandbox evaluation with clinical review.
+
+Contributing:
+
+This is an early-stage prototype. Contributions are welcome!
+
+Improve fairness metrics
+
+Add new mitigation strategies (SMOTE, TVAE, etc.)
+
+Expand privacy checks
+
+Fork the repo, make your changes, and open a pull request.
+
+License:
+
+MIT License — free to use, modify, and share.
+
+
