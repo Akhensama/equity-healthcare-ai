@@ -1,16 +1,21 @@
-# Core scientific stack (Py 3.11 compatible, NumPy < 2)
+# Core scientific stack (Py 3.11)
 numpy==1.26.4
 pandas==2.1.4
 scipy==1.11.4
 scikit-learn==1.3.2
 
-# Synthetic data (CTGAN directly; SDV not required)
+# Synthetic data
 ctgan==0.11.0
 
 # Reporting / visualization
 matplotlib==3.8.4
 seaborn==0.13.2
-jupyter==7.4.5
+
+# Jupyter stack (explicit)
+notebook==7.2.2
+ipykernel==6.29.5
+jupyter-client==8.6.3
+jupyter-core==5.7.2
 
 # Utilities
 tqdm==4.67.1
