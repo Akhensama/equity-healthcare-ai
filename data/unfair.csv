@@ -1,0 +1,21 @@
+@"
+sex,label,score
+# males: well-scored
+M,1,0.95
+M,1,0.90
+M,1,0.85
+M,0,0.20
+M,0,0.15
+M,0,0.10
+# females: positives under-scored, negatives over-scored
+F,1,0.40
+F,1,0.35
+F,1,0.30
+F,0,0.55
+F,0,0.60
+F,0,0.65
+M,1,0.88
+M,0,0.25
+F,1,0.45
+F,0,0.58
+"@ | Set-Content data/fake_er_unfair_scores.csv
