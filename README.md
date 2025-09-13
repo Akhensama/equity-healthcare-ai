@@ -48,6 +48,7 @@ Installation
 Clone the repo and install dependencies:
 
 git clone https://github.com/defnecolak/equity-healthcare-ai.git
+
 cd equity-healthcare-ai
 
 Re-install deps inside the activated venv:
