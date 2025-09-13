@@ -1,6 +1,18 @@
-numpy>=2.0
-pandas>=2.2
-scikit-learn>=1.5,<1.6
-sdv>=1.12.0
-ctgan>=0.11.0
-tqdm>=4.66
+# Core scientific stack
+numpy==1.26.4
+pandas==2.2.3
+scikit-learn==1.5.2
+scipy==1.11.4
+
+# Synthetic data generation
+sdv==1.12.0
+ctgan==0.11.0
+
+# Reporting / visualization
+matplotlib==3.9.2
+seaborn==0.13.2
+jupyter==1.0.0
+
+# Utilities
+tqdm==4.66.4
+pyyaml==6.0.1
