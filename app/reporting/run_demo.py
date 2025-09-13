@@ -141,11 +141,19 @@ def main():
     # BEFORE (baseline) — copy everything compute_report_metrics provides
     report.update(base)
 
+    # Detect method (temporary heuristic)
+    if args.csv_after and "smote" in args.csv_after.lower():
+        method_used = "SMOTE oversampling"
+    elif args.csv_after and "ctgan" in args.csv_after.lower():
+        method_used = "CTGAN female oversampling"
+    else:
+        method_used = "Unknown mitigation"
+        
     # AFTER (mitigation) — map to _syn fields expected by the template
     if after:
         report.update(
             {
-                "method_name": "CTGAN female oversampling",
+                "method_name": method_used,
                 "pct_female_syn": after.get("pct_female", "N/A"),
                 "auroc_m_syn": after.get("auroc_m", "N/A"),
                 "auroc_f_syn": after.get("auroc_f", "N/A"),
