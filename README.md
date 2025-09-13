@@ -97,6 +97,66 @@ Expand privacy checks
 
 Fork the repo, make your changes, and open a pull request.
 
+How to Use:
+
+This project generates fairness and equity reports for healthcare ML models using synthetic balancing (CTGAN, SMOTE, TVAE, etc.).
+
+1. Clone the repo
+git clone https://github.com/defnecolak/equity-healthcare-ai.git
+cd equity-healthcare-ai
+
+2. Set up environment
+
+Make sure you have Python 3.11+ installed. Then create a virtual environment:
+
+python -m venv .venv
+.venv\Scripts\activate    # (Windows PowerShell)
+# or
+source .venv/bin/activate # (Linux / MacOS)
+
+Install dependencies:
+pip install -r requirements.txt
+
+3. Run synthetic balancing (optional)
+
+Generate a balanced dataset with CTGAN:
+
+python app/synthetic/balance_with_ctgan.py \
+  --csv data/imbalanced.csv \
+  --out data/synthetic/balanced_ctgan.csv \
+  --epochs 300
+
+  This will create:
+📂 data/synthetic/balanced_ctgan.csv
+
+4. Generate equity report
+
+Run the reporting module:
+python -m app.reporting.run_demo \
+  --csv_before data/imbalanced.csv \
+  --csv_after data/synthetic/balanced_ctgan.csv \
+  --out reports/EquityReport.md \
+  --thr 0.5
+
+5.View results
+
+The report will be saved as:
+
+📄 reports/EquityReport.md
+
+You can open it:
+
+In VS Code (supports Markdown preview)
+
+On GitHub (renders automatically)
+
+Or quick check in terminal:
+type reports/EquityReport.md
+
+Note: This tool is a prototype, not for clinical use. It’s designed to demonstrate fairness reporting workflows.
+
+
+
 License:
 
 MIT License — free to use, modify, and share.
